@@ -7,7 +7,7 @@ import { userDetails } from "@/types";
 import Rating from "@/components/rating";
 
 export default function Osu() {
-    const [username, setUsername] = useState<string | null>(null);
+    const [username, setUsername] = useState("");
     const [warning, setWarning] = useState<string | null>(null);
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
