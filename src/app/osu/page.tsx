@@ -2,25 +2,32 @@
 import Header from "@/components/header";
 import Universities from "@/components/universities";
 import { useState } from "react";
-import { BASE_URL } from "@/lib/index";
-import { userDetails } from "@/types";
-import Rating from "@/components/rating";
+import { ExamCategory } from "@/types/exam";
+import { fetchUserDetails } from "@/lib/osu";
 
 export default function Osu() {
     const [username, setUsername] = useState("");
     const [warning, setWarning] = useState<string | null>(null);
+    const [ranking, setRanking] = useState<number | null>(null);
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-
-        const res = await fetch(`${BASE_URL}api/osu/user/${username}`);
-        if (!res.ok) {
-            setWarning("Girdiğiniz isim yanlış. Lütfen tekrar deneyin.");
-            return;
+        if (username.trim() !== "") {
+            const data = await fetchUserDetails(username);
+            if (data) {
+                if (data.statistics.global_rank === null) {
+                    setWarning("Sıralama bulunamadı. Sıralamadaki aktifliğinizi kontrol edin.");
+                }
+                else {
+                    setRanking(data.statistics.global_rank);
+                    setWarning(null);
+                }
+            } else {
+                setWarning("Girdiğiniz isim yanlış. Lütfen tekrar deneyin.");
+            }
+        } else {
+            setWarning("Lütfen bir isim girin.");
         }
-
-        setWarning(null);
-        const data: userDetails = await res.json();
     }
 
     return (
@@ -54,8 +61,7 @@ export default function Osu() {
                     </div>
                 </form>
                 {warning && <div className="text-red-500 text-sm mt-1">{warning}</div>}
-                <Universities percentage={10} />
-                <Rating />
+                {ranking && <Universities examType={ExamCategory.TYT} ranking={ranking} />}
             </div>
         </section>
     );
