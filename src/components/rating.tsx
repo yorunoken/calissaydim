@@ -2,26 +2,38 @@ import { SetStateAction, useState } from "react";
 
 export default function Rating() {
     const [rating, setRating] = useState(0);
+    const [isLocked, setIsLocked] = useState(false);
+    const [message, setMessage] = useState("");
 
     const handleRating = (rate: SetStateAction<number>) => {
-        setRating(rate);
-        sendRatingToDatabase(rate); // Placeholder function to send the rating to the database
+        if (!isLocked) {
+            setIsLocked(true);
+            setRating(rate);
+
+            sendRatingToDatabase(rate); // Placeholder function to send the rating to the database
+
+            setMessage("Görüşünüz gönderildi.");
+        }
     };
 
-    const sendRatingToDatabase = (rate: any) => {
+    const sendRatingToDatabase = (rate: SetStateAction<number>) => {
         console.log(`Rating sent to database: ${rate}`);
         // Implement your database logic here
     };
 
     return (
         <div className="mt-6 flex flex-col items-center">
-            <span className="italic font-light">"Sonuçlar beklediğiniz gibi miydi?"</span>
+            <span className="italic font-light">
+                {'"'}Sonuçlar beklediğiniz gibi miydi?{'"'}
+            </span>
             <div className="flex py-2 justify-center items-center">
                 {[1, 2, 3, 4, 5].map((star) => (
                     <svg
                         key={star}
                         onClick={() => handleRating(star)}
-                        className={`w-4 h-4 ms-1 hover:cursor-pointer ${rating >= star ? "text-yellow-300" : "text-gray-300 dark:text-gray-500"}`}
+                        className={`w-4 h-4 ms-1 transition-colors duration-300 ease-in-out ${rating >= star ? "text-yellow-300" : "text-gray-300 dark:text-gray-500"} ${
+                            isLocked ? "cursor-not-allowed" : "cursor-pointer"
+                        }`}
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor"
@@ -31,6 +43,7 @@ export default function Rating() {
                     </svg>
                 ))}
             </div>
+            {message && <p className="text-green-400">{message}</p>}
         </div>
     );
 }
