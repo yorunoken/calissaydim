@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { CustomResult, ExamCategory } from "@/types/exam";
 import { University } from "@/components/university";
 import Rating from "./rating";
+import LoadingSkeleton from "./loadingSkeleton";
 
 export default function Universities({ ranking, examType }: { ranking: number; examType: ExamCategory }) {
     const [data, setData] = useState<Array<CustomResult> | null>(null);
@@ -56,7 +57,7 @@ export default function Universities({ ranking, examType }: { ranking: number; e
     }
 
     if (!data) {
-        return <div className="mt-4 text-red-600">Loading...</div>;
+        return <LoadingSkeleton />;
     }
 
     if (data.length === 0) {

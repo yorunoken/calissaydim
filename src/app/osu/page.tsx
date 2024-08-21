@@ -4,27 +4,31 @@ import Universities from "@/components/universities";
 import { useState } from "react";
 import { ExamCategory } from "@/types/exam";
 import { fetchUserDetails } from "@/lib/osu";
+import LoadingSkeleton from "@/components/loadingSkeleton";
 
 export default function Osu() {
     const [username, setUsername] = useState("");
     const [warning, setWarning] = useState<string | null>(null);
     const [ranking, setRanking] = useState<number | null>(null);
+    const [loading, setLoading] = useState(false);
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         if (username.trim() !== "") {
+            setLoading(true);
+            setRanking(null);
             const data = await fetchUserDetails(username);
             if (data) {
                 if (data.statistics.global_rank === null) {
                     setWarning("Sıralama bulunamadı. Sıralamadaki aktifliğinizi kontrol edin.");
-                }
-                else {
+                } else {
                     setRanking(data.statistics.global_rank);
                     setWarning(null);
                 }
             } else {
                 setWarning("Girdiğiniz isim yanlış. Lütfen tekrar deneyin.");
             }
+            setLoading(false);
         } else {
             setWarning("Lütfen bir isim girin.");
         }
@@ -61,6 +65,7 @@ export default function Osu() {
                     </div>
                 </form>
                 {warning && <div className="text-red-500 text-sm mt-1">{warning}</div>}
+                {loading && <LoadingSkeleton />}
                 {ranking && <Universities examType={ExamCategory.TYT} ranking={ranking} />}
             </div>
         </section>
