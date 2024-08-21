@@ -10,7 +10,7 @@ export default function Universities({ ranking, examType }: { ranking: number; e
 
     useEffect(() => {
         async function fetchData() {
-            const query = `SELECT * FROM tytData WHERE CAST(tbs_2024 AS INTEGER) >= ${ranking} ORDER BY CAST(tbs_2024 AS INTEGER) ASC LIMIT 5;`;
+            const query = `WHERE CAST(tbs_2024 AS INTEGER) >= ${ranking} ORDER BY CAST(tbs_2024 AS INTEGER) ASC LIMIT 5;`;
 
             try {
                 let res;
