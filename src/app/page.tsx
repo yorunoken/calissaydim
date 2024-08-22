@@ -33,7 +33,7 @@ function GameCards({ gameName }: { gameName: string }) {
     return (
         <Link href={`/${gameName}`}>
             <div className="flex flex-col items-center">
-                <Image src={`/games/${gameName}.png`} width={100} height={100} alt={`${gameName} logo`} />
+                <Image src={`/games/${gameName}.png`} width={100} height={100} alt={`${gameName} logo`} priority />
                 <span className="font-medium mt-2">{gameName}</span>
             </div>
         </Link>

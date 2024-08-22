@@ -5,6 +5,7 @@ import { useState } from "react";
 import { ExamCategory } from "@/types/exam";
 import { fetchUserDetails } from "@/lib/osu";
 import LoadingSkeleton from "@/components/loadingSkeleton";
+import Rating from "@/components/rating";
 
 export default function Osu() {
     const [username, setUsername] = useState("");
@@ -23,6 +24,7 @@ export default function Osu() {
                     setWarning("Sıralama bulunamadı. Sıralamadaki aktifliğinizi kontrol edin.");
                 } else {
                     setRanking(data.statistics.global_rank);
+                    setUsername(data.username);
                     setWarning(null);
                 }
             } else {
@@ -65,8 +67,36 @@ export default function Osu() {
                     </div>
                 </form>
                 {warning && <div className="text-red-500 text-sm mt-1">{warning}</div>}
-                {loading && <LoadingSkeleton />}
-                {ranking && <Universities examType={ExamCategory.TYT} ranking={ranking} />}
+                {loading && (
+                    <>
+                        <div className="grid gap-4 px-24 mx-auto">
+                            <div className="grid grid-cols-2 gap-4">
+                                {Array.from({ length: 4 }).map((_, index) => (
+                                    <LoadingSkeleton key={index} />
+                                ))}
+                            </div>
+                        </div>
+                        <div className="flex flex-col mt-4 justify-center mb-12">
+                            <LoadingSkeleton />
+                        </div>
+                    </>
+                )}
+                {ranking && (
+                    <>
+                        <div className="grid gap-4 px-24 mx-auto">
+                            <div className="grid grid-cols-2 gap-4">
+                                <Universities examType={ExamCategory.SAY} ranking={ranking} />
+                                <Universities examType={ExamCategory.EA} ranking={ranking} />
+                                <Universities examType={ExamCategory.DIL} ranking={ranking} />
+                                <Universities examType={ExamCategory.SOZ} ranking={ranking} />
+                            </div>
+                        </div>
+                        <div className="flex flex-col mt-4 justify-center mb-12">
+                            <Universities examType={ExamCategory.TYT} ranking={ranking} />
+                            <Rating />
+                        </div>
+                    </>
+                )}
             </div>
         </section>
     );
