@@ -3,14 +3,14 @@ import Link from "next/link";
 
 export default function Header({ activeGame }: { activeGame?: string }) {
     return (
-        <header className="bg-[#1e1e1e] text-white flex items-center px-6 py-3 space-x-8 divide-x divide-gray-600">
-            <div className="flex items-center">
+        <header className="bg-[#1e1e1e] text-white flex flex-col lg:flex-row items-center px-6 py-3 divide-gray-600">
+            <div className="flex items-center justify-center lg:justify-start mb-4 lg:mb-0 w-full lg:w-auto">
                 <Link href="/" className="flex items-center">
                     <Image src="/ahmet.png" width={223} height={226} className="h-[50px] w-[50px] mr-3 rounded-lg" alt="Calissaydim logo" />
-                    <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">YKS Çalışsaydım</span>
+                    <span className="text-xl font-semibold whitespace-nowrap dark:text-white">YKS Çalışsaydım</span>
                 </Link>
             </div>
-            <div className="flex font-medium space-x-6 pl-8">
+            <div className="flex flex-wrap font-medium items-center justify-center lg: lg:justify-start space-x-3 w-full lg:w-auto">
                 <Link href="/" className={`${activeGame === "main" ? "text-white" : "text-gray-400"}`}>
                     Ana Sayfa
                 </Link>
