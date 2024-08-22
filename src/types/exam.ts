@@ -11,7 +11,6 @@ export interface CustomResult {
     className: string;
     classFaculty: string;
     tbs2024: string;
-    tbs2023: string;
 }
 
 export interface Tyt {
