@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function Home() {
-    const games = ["osu", "valorant"];
+    const games = ["osu!", "Valorant"];
 
     return (
         <section className="w-full">
@@ -30,10 +30,11 @@ export default function Home() {
 }
 
 function GameCards({ gameName }: { gameName: string }) {
+    const formattedGame = gameName.replace("!", "").toLowerCase();
     return (
-        <Link href={`/${gameName}`}>
+        <Link href={`/${formattedGame}`}>
             <div className="flex flex-col items-center">
-                <Image src={`/games/${gameName}.png`} width={100} height={100} alt={`${gameName} logo`} priority />
+                <Image src={`/games/${formattedGame}.png`} width={100} height={100} alt={`${formattedGame} logo`} priority />
                 <span className="font-medium mt-2">{gameName}</span>
             </div>
         </Link>
