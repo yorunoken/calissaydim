@@ -1,4 +1,3 @@
-import { BASE_URL } from "@/lib";
 import { useState, useEffect } from "react";
 import { CustomResult, ExamCategory } from "@/types/exam";
 import { University } from "@/components/university";
@@ -17,11 +16,11 @@ export default function Universities({ ranking, examType }: { ranking: number; e
                 switch (examType) {
                     case ExamCategory.TYT:
                         console.log("fetching tyt");
-                        res = await fetch(`${BASE_URL}api/${examType}?query=${query}`);
+                        res = await fetch(`/api/proxy/${examType}?query=${query}`);
                         break;
                     default:
                         console.log("fetching ayt: ", examType);
-                        res = await fetch(`${BASE_URL}api/ayt/${examType}?query=${query}`);
+                        res = await fetch(`/api/proxy/ayt/${examType}?query=${query}`);
                         break;
                 }
 

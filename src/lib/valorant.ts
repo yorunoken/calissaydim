@@ -1,8 +1,9 @@
-import { BASE_URL } from "@/lib/index";
 import { userDetails } from "@/types/valorant";
 
-export async function fetchRankDetails(rank: string): Promise<userDetails | null> {
-    const res = await fetch(`${BASE_URL}api/valorant/estimate/${rank}`);
+export async function fetchRankDetails(
+    rank: string,
+): Promise<userDetails | null> {
+    const res = await fetch(`/api/valorant/estimate/${rank}`);
     if (!res.ok) {
         console.log(res);
         return null;
