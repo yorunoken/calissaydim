@@ -3,48 +3,58 @@ import { CustomResult, ExamCategory } from "@/types/exam";
 import { University } from "@/components/university";
 import LoadingSkeleton from "./loadingSkeleton";
 
+async function getExamData({ examType, query }: { examType: ExamCategory; query: string }): Promise<[any, true | null]> {
+    let res;
+    switch (examType) {
+        case ExamCategory.TYT:
+            console.log("fetching tyt");
+            res = await fetch(`/api/proxy/${examType}?query=${query}`);
+            break;
+        default:
+            console.log("fetching ayt: ", examType);
+            res = await fetch(`/api/proxy/ayt/${examType}?query=${query}`);
+            break;
+    }
+
+    if (!res.ok) {
+        console.log("There was an error: ", res);
+        return [null, true];
+    }
+
+    const resultData = await res.json();
+
+    return [resultData, null];
+}
+
 export default function Universities({ ranking, examType }: { ranking: number; examType: ExamCategory }) {
     const [data, setData] = useState<Array<CustomResult> | null>(null);
-    const [error, setError] = useState<boolean>(false);
+    const [error, setError] = useState(false);
 
     useEffect(() => {
         async function fetchData() {
-            const query = `WHERE CAST(tbs_2024 AS INTEGER) >= ${ranking} ORDER BY CAST(tbs_2024 AS INTEGER) ASC LIMIT 5;`;
+            let query = `WHERE CAST(tbs_2024 AS INTEGER) >= ${ranking} ORDER BY CAST(tbs_2024 AS INTEGER) ASC LIMIT 5;`;
 
-            try {
-                let res;
-                switch (examType) {
-                    case ExamCategory.TYT:
-                        console.log("fetching tyt");
-                        res = await fetch(`/api/proxy/${examType}?query=${query}`);
-                        break;
-                    default:
-                        console.log("fetching ayt: ", examType);
-                        res = await fetch(`/api/proxy/ayt/${examType}?query=${query}`);
-                        break;
-                }
-
-                if (!res.ok) {
-                    setError(true);
-                    console.log("There was an error: ", res);
-                    return;
-                }
-
-                const resultData = await res.json();
-
-                const mappedResults: Array<CustomResult> = resultData.map((result: any) => ({
-                    universityName: result.university_name ?? "",
-                    classFaculty: result.faculty ?? "",
-                    className: result.class_name ?? "",
-                    tbs2023: (Number(result.tbs_2023) || "-").toLocaleString(),
-                    tbs2024: (Number(result.tbs_2024) || "-").toLocaleString(),
-                }));
-
-                setData(mappedResults);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-                setError(true);
+            let resultData = await getExamData({ examType, query });
+            if (!resultData) {
+                let query = `WHERE base_score_2024 IS NULL ORDER BY RANDOM() LIMIT 5;`;
+                resultData = await getExamData({ examType, query });
             }
+
+            if (!resultData) {
+                setError(true);
+                return;
+            }
+
+            const [data] = resultData;
+
+            const mappedResults: Array<CustomResult> = data.map((result: any) => ({
+                universityName: result.university_name ?? "",
+                classFaculty: result.faculty ?? "",
+                className: result.class_name ?? "",
+                tbs2024: (Number(result.tbs_2024) || "-").toLocaleString(),
+            }));
+
+            setData(mappedResults);
         }
 
         fetchData();
@@ -92,14 +102,11 @@ export default function Universities({ ranking, examType }: { ranking: number; e
                         <th scope="col" className="capitalize px-3 py-2 text-left">
                             sıralama 2024
                         </th>
-                        <th scope="col" className="capitalize px-3 py-2 text-left">
-                            sıralama 2023
-                        </th>
                     </tr>
                 </thead>
                 <tbody className="border-collapse">
                     {data.map((result, index) => (
-                        <University key={index} university={result.universityName} className={result.className} classFaculty={result.classFaculty} tbs2023={result.tbs2023} tbs2024={result.tbs2024} />
+                        <University key={index} university={result.universityName} className={result.className} classFaculty={result.classFaculty} tbs2024={result.tbs2024} />
                     ))}
                 </tbody>
             </table>
