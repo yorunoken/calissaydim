@@ -44,21 +44,15 @@ export default function Valorant() {
             setLoading(true);
             setRanking(null);
             const data = await fetchRankDetails(rank.replace(" ", ""));
-            console.log(data);
             if (data) {
-                // if (data.statistics.global_rank === null) {
-                //     setWarning("Sıralama bulunamadı. Sıralamadaki aktifliğinizi kontrol edin.");
-                // } else {
-                //     setRanking(data.statistics.global_rank);
-                //     setUsername(data.username);
-                //     setWarning(null);
-                // }
+                setRanking(data.estimate_rank);
+                setWarning(null);
             } else {
-                setWarning("Girdiğiniz rank yanlış. Lütfen tekrar deneyin.");
+                setWarning("Bir şeyler yanlış gitti. Lütfen tekrar deneyin.");
             }
             setLoading(false);
         } else {
-            setWarning("Lütfen bir isim girin.");
+            setWarning("Lütfen rankınızı seçin.");
         }
     }
 
