@@ -11,9 +11,14 @@ export default function Header({ activeGame }: { activeGame?: string }) {
                 </Link>
             </div>
             <div className="flex font-medium space-x-6 pl-8">
-                <Link href="/">Ana Sayfa</Link>
+                <Link href="/" className={`${activeGame === "main" ? "text-white" : "text-gray-400"}`}>
+                    Ana Sayfa
+                </Link>
                 <Link href="/osu" className={`${activeGame === "osu" ? "text-pink-300" : "text-gray-400"}`}>
                     osu!
+                </Link>
+                <Link href="/valorant" className={`${activeGame === "valorant" ? "text-rose-600" : "text-gray-400"}`}>
+                    Valorant
                 </Link>
             </div>
         </header>

@@ -7,7 +7,7 @@ export default function Home() {
 
     return (
         <section className="w-full">
-            <Header />
+            <Header activeGame="main" />
             <div className="bg-[#292929] flex min-h-screen flex-col items-center">
                 <div className="flex flex-col text-center">
                     <span className="text-4xl mt-8 pb-5">
