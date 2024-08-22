@@ -1,6 +1,7 @@
 export default function LoadingSkeleton() {
     return (
-        <div className="relative overflow-x-auto mt-8">
+        <div className="relative overflow-x-auto mt-8 items-center justify-center flex flex-col">
+            <div className="bg-[#1e1e1e] h-8 w-60 mb-2 rounded animate-pulse"></div>
             <table className="table-auto  rounded w-full text-sm text-left rtl:text-right text-gray-300">
                 <thead className="text-xs uppercase bg-[#1e1e1e] text-gray-300">
                     <tr>
