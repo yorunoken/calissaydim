@@ -41,7 +41,7 @@ export default function Osu() {
             <Header activeGame="osu" />
             <div className="bg-[#292929] flex min-h-screen flex-col items-center">
                 <div className="flex flex-col text-center mb-6">
-                    <span className="text-4xl mt-8 pb-5">
+                    <span className="text-4xl mt-8 p-5">
                         <span className="font-bold italic pr-2">YKS Çalışsaydım </span>
                         <span className="font-normal">ne kazanırdım?</span>
                     </span>
@@ -50,7 +50,7 @@ export default function Osu() {
                     </span>
                 </div>
                 <form onSubmit={handleSubmit}>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 mr-5 ml-5">
                         <input
                             type="text"
                             value={username}
@@ -83,15 +83,15 @@ export default function Osu() {
                 )}
                 {ranking && (
                     <>
-                        <div className="grid gap-4 px-24 mx-auto">
-                            <div className="grid grid-cols-2 gap-4">
+                        <div className="grid gap-2 px-4 mx-auto">
+                            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-4">
                                 <Universities examType={ExamCategory.SAY} ranking={ranking} />
                                 <Universities examType={ExamCategory.EA} ranking={ranking} />
                                 <Universities examType={ExamCategory.DIL} ranking={ranking} />
                                 <Universities examType={ExamCategory.SOZ} ranking={ranking} />
                             </div>
                         </div>
-                        <div className="flex flex-col mt-4 justify-center mb-12">
+                        <div className="flex flex-col px-4 mt-4 justify-center mb-12">
                             <Universities examType={ExamCategory.TYT} ranking={ranking} />
                             <Rating />
                         </div>
