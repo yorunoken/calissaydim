@@ -6,6 +6,7 @@ import { ExamCategory } from "@/types/exam";
 import { fetchRankDetails } from "@/lib/valorant";
 import LoadingSkeleton from "@/components/loadingSkeleton";
 import Rating from "@/components/rating";
+import CustomDropdown from "@/components/customDropdown";
 
 const valorantRanks = [
     "Iron 1",
@@ -71,20 +72,7 @@ export default function Valorant() {
                 </div>
                 <form onSubmit={handleSubmit}>
                     <div className="flex gap-2">
-                        <select
-                            value={rank || ""}
-                            onChange={(e) => setRank(e.target.value)}
-                            className="px-4 py-2 bg-[#1e1e1e] text-gray-200 border border-gray-700 rounded-md focus:outline-none focus:ring-1 focus:ring-[#61dafb]"
-                        >
-                            <option value="" disabled>
-                                Rank seçiniz
-                            </option>
-                            {valorantRanks.map((rank, index) => (
-                                <option key={index} value={rank}>
-                                    {rank}
-                                </option>
-                            ))}
-                        </select>
+                        <CustomDropdown options={valorantRanks} onChange={(selectedRank) => setRank(selectedRank)} placeholder="Rank seçiniz" />
                         <button
                             type="submit"
                             className="px-4 py-1 bg-[#61dafb] text-[#1e1e1e] font-semibold rounded-md hover:bg-[#4fa8c7] focus:outline-none focus:ring-2 focus:ring-[#61dafb] transition duration-200"
@@ -110,15 +98,15 @@ export default function Valorant() {
                 )}
                 {ranking && (
                     <>
-                        <div className="grid gap-4 px-24 mx-auto">
-                            <div className="grid grid-cols-2 gap-4">
+                        <div className="grid gap-2 px-4 mx-auto">
+                            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4">
                                 <Universities examType={ExamCategory.SAY} ranking={ranking} />
                                 <Universities examType={ExamCategory.EA} ranking={ranking} />
                                 <Universities examType={ExamCategory.DIL} ranking={ranking} />
                                 <Universities examType={ExamCategory.SOZ} ranking={ranking} />
                             </div>
                         </div>
-                        <div className="flex flex-col mt-4 justify-center mb-12">
+                        <div className="flex flex-col px-4 mt-4 justify-center mb-12">
                             <Universities examType={ExamCategory.TYT} ranking={ranking} />
                             <Rating />
                         </div>
