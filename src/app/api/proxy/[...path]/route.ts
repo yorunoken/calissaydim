@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 
+const backendPort = 3030;
+
 export async function GET(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
     const searchParams = request.nextUrl.searchParams;
     const path = pathname.replace("/api/proxy", "");
 
-    const url = new URL(`http://localhost:3030/api${path}`);
+    const url = new URL(`http://localhost:${backendPort}/api${path}`);
     searchParams.forEach((value, key) => {
         url.searchParams.append(key, value);
     });
@@ -20,7 +22,7 @@ export async function POST(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
     const path = pathname.replace("/api/proxy", "");
 
-    const url = new URL(`http://localhost:3030/api${path}`);
+    const url = new URL(`http://localhost:${backendPort}/api${path}`);
 
     const response = await fetch(url, {
         method: "POST",
