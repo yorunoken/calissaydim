@@ -2,38 +2,53 @@
 import Header from "@/components/header";
 import Universities from "@/components/universities";
 import { useState } from "react";
-import { ExamCategory } from "@/types/exam";
+import { CustomResult, ExamCategory } from "@/types/exam";
 import { fetchUserDetails } from "@/lib/osu";
 import LoadingSkeleton from "@/components/loadingSkeleton";
 import Rating from "@/components/rating";
+import { fetchUniversities } from "@/lib/fetchUniversities";
 
 export default function Osu() {
     const [username, setUsername] = useState("");
     const [warning, setWarning] = useState<string | null>(null);
-    const [ranking, setRanking] = useState<number | null>(null);
+    const [dataLoaded, setDataLoaded] = useState<boolean>(false);
     const [loading, setLoading] = useState(false);
+    const [universitiesData, setUniversitiesData] = useState<Record<ExamCategory, Array<CustomResult>>>({} as Record<ExamCategory, Array<CustomResult>>);
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         if (username.trim() !== "") {
-            setLoading(true);
-            setRanking(null);
-            const data = await fetchUserDetails(username);
-            if (data) {
-                if (data.statistics.global_rank === null) {
-                    setWarning("Sıralama bulunamadı. Sıralamadaki aktifliğinizi kontrol edin.");
-                } else {
-                    setRanking(data.statistics.global_rank);
-                    setUsername(data.username);
-                    setWarning(null);
-                }
-            } else {
-                setWarning("Girdiğiniz isim yanlış. Lütfen tekrar deneyin.");
-            }
-            setLoading(false);
-        } else {
             setWarning("Lütfen bir isim girin.");
+            return;
         }
+
+        setLoading(true);
+
+        const data = await fetchUserDetails(username);
+        if (!data) {
+            setWarning("Girdiğiniz isim yanlış. Lütfen tekrar deneyin.");
+            setLoading(false);
+
+            return;
+        }
+
+        if (data.statistics.global_rank === null) {
+            setWarning("Sıralama bulunamadı. Sıralamadaki aktifliğinizi kontrol edin.");
+            setLoading(false);
+
+            return;
+        }
+
+        const rank = data.statistics.global_rank;
+        setUsername(data.username);
+        setWarning(null);
+
+        const allUniversitiesData = await fetchUniversities(rank);
+        setUniversitiesData(allUniversitiesData);
+
+        setDataLoaded(true);
+
+        setLoading(false);
     }
 
     return (
@@ -81,18 +96,18 @@ export default function Osu() {
                         </div>
                     </>
                 )}
-                {ranking && (
+                {dataLoaded && (
                     <>
                         <div className="grid gap-2 px-4 mx-auto">
                             <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-4">
-                                <Universities examType={ExamCategory.SAY} ranking={ranking} />
-                                <Universities examType={ExamCategory.EA} ranking={ranking} />
-                                <Universities examType={ExamCategory.DIL} ranking={ranking} />
-                                <Universities examType={ExamCategory.SOZ} ranking={ranking} />
+                                <Universities examType={ExamCategory.SAY} data={universitiesData[ExamCategory.SAY]} />
+                                <Universities examType={ExamCategory.EA} data={universitiesData[ExamCategory.EA]} />
+                                <Universities examType={ExamCategory.DIL} data={universitiesData[ExamCategory.DIL]} />
+                                <Universities examType={ExamCategory.SOZ} data={universitiesData[ExamCategory.SOZ]} />
                             </div>
                         </div>
                         <div className="flex flex-col px-4 mt-4 justify-center mb-12">
-                            <Universities examType={ExamCategory.TYT} ranking={ranking} />
+                            <Universities examType={ExamCategory.TYT} data={universitiesData[ExamCategory.TYT]} />
                             <Rating />
                         </div>
                     </>

@@ -2,11 +2,12 @@
 import Header from "@/components/header";
 import Universities from "@/components/universities";
 import { useState } from "react";
-import { ExamCategory } from "@/types/exam";
+import { CustomResult, ExamCategory } from "@/types/exam";
 import { fetchRankDetails } from "@/lib/valorant";
 import LoadingSkeleton from "@/components/loadingSkeleton";
 import Rating from "@/components/rating";
 import CustomDropdown from "@/components/customDropdown";
+import { fetchUniversities } from "@/lib/fetchUniversities";
 
 const valorantRanks = [
     "Iron 1",
@@ -36,25 +37,35 @@ const valorantRanks = [
 export default function Valorant() {
     const [rank, setRank] = useState<string | null>(null);
     const [warning, setWarning] = useState<string | null>(null);
-    const [ranking, setRanking] = useState<number | null>(null);
     const [loading, setLoading] = useState(false);
+    const [dataLoaded, setDataLoaded] = useState<boolean>(false);
+    const [universitiesData, setUniversitiesData] = useState<Record<ExamCategory, Array<CustomResult>>>({} as Record<ExamCategory, Array<CustomResult>>);
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        if (rank) {
-            setLoading(true);
-            setRanking(null);
-            const data = await fetchRankDetails(rank.replace(" ", ""));
-            if (data) {
-                setRanking(data.estimate_rank);
-                setWarning(null);
-            } else {
-                setWarning("Bir şeyler yanlış gitti. Lütfen tekrar deneyin.");
-            }
-            setLoading(false);
-        } else {
+        if (!rank) {
             setWarning("Lütfen rankınızı seçin.");
+            return;
         }
+
+        setLoading(true);
+
+        const data = await fetchRankDetails(rank.replace(" ", ""));
+
+        if (!data) {
+            setWarning("Bir şeyler yanlış gitti. Lütfen tekrar deneyin.");
+            setLoading(false);
+
+            return;
+        }
+
+        setWarning(null);
+
+        const allUniversitiesData = await fetchUniversities(data.estimate_rank);
+        setUniversitiesData(allUniversitiesData);
+
+        setDataLoaded(true);
+        setLoading(false);
     }
 
     return (
@@ -96,18 +107,18 @@ export default function Valorant() {
                         </div>
                     </>
                 )}
-                {ranking && (
+                {dataLoaded && (
                     <>
                         <div className="grid gap-2 px-4 mx-auto">
-                            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-4">
-                                <Universities examType={ExamCategory.SAY} ranking={ranking} />
-                                <Universities examType={ExamCategory.EA} ranking={ranking} />
-                                <Universities examType={ExamCategory.DIL} ranking={ranking} />
-                                <Universities examType={ExamCategory.SOZ} ranking={ranking} />
+                            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-4">
+                                <Universities examType={ExamCategory.SAY} data={universitiesData[ExamCategory.SAY]} />
+                                <Universities examType={ExamCategory.EA} data={universitiesData[ExamCategory.EA]} />
+                                <Universities examType={ExamCategory.DIL} data={universitiesData[ExamCategory.DIL]} />
+                                <Universities examType={ExamCategory.SOZ} data={universitiesData[ExamCategory.SOZ]} />
                             </div>
                         </div>
                         <div className="flex flex-col px-4 mt-4 justify-center mb-12">
-                            <Universities examType={ExamCategory.TYT} ranking={ranking} />
+                            <Universities examType={ExamCategory.TYT} data={universitiesData[ExamCategory.TYT]} />
                             <Rating />
                         </div>
                     </>

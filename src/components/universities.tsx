@@ -1,65 +1,8 @@
-import { useState, useEffect } from "react";
 import { CustomResult, ExamCategory } from "@/types/exam";
 import { University } from "@/components/university";
 import LoadingSkeleton from "./loadingSkeleton";
 
-async function getExamData({ examType, query }: { examType: ExamCategory; query: string }): Promise<[any, true | null]> {
-    let res;
-    switch (examType) {
-        case ExamCategory.TYT:
-            console.log("fetching tyt");
-            res = await fetch(`/api/proxy/${examType}?query=${query}`);
-            break;
-        default:
-            console.log("fetching ayt: ", examType);
-            res = await fetch(`/api/proxy/ayt/${examType}?query=${query}`);
-            break;
-    }
-
-    if (!res.ok) {
-        console.log("There was an error: ", res);
-        return [null, true];
-    }
-
-    const resultData = await res.json();
-
-    return [resultData, null];
-}
-
-export default function Universities({ ranking, examType }: { ranking: number; examType: ExamCategory }) {
-    const [data, setData] = useState<Array<CustomResult> | null>(null);
-    const [error, setError] = useState(false);
-
-    useEffect(() => {
-        async function fetchData() {
-            let query = `WHERE CAST(tbs_2024 AS INTEGER) >= ${ranking} ORDER BY CAST(tbs_2024 AS INTEGER) ASC LIMIT 5;`;
-
-            let resultData = await getExamData({ examType, query });
-            if (!resultData) {
-                let query = `WHERE base_score_2024 IS NULL ORDER BY RANDOM() LIMIT 5;`;
-                resultData = await getExamData({ examType, query });
-            }
-
-            if (!resultData) {
-                setError(true);
-                return;
-            }
-
-            const [data] = resultData;
-
-            const mappedResults: Array<CustomResult> = data.map((result: any) => ({
-                universityName: result.university_name ?? "",
-                classFaculty: result.faculty ?? "",
-                className: result.class_name ?? "",
-                tbs2024: (Number(result.tbs_2024) || "-").toLocaleString(),
-            }));
-
-            setData(mappedResults);
-        }
-
-        fetchData();
-    }, [ranking, examType]);
-
+export default function Universities({ examType, data }: { examType: ExamCategory; data: Array<CustomResult> | undefined }) {
     let examTypeText = "";
     if (examType === ExamCategory.SAY) {
         examTypeText = "Sayısal";
@@ -73,10 +16,6 @@ export default function Universities({ ranking, examType }: { ranking: number; e
         examTypeText = "TYT";
     } else {
         examTypeText = examType;
-    }
-
-    if (error) {
-        return <div className="mt-4 text-red-600">Veri yüklenirken hata ile karşılaşıldı.</div>;
     }
 
     if (!data) {
