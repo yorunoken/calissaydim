@@ -17,7 +17,7 @@ export default function Osu() {
 
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
-        if (username.trim() !== "") {
+        if (username.trim() === "") {
             setWarning("Lütfen bir isim girin.");
             return;
         }
