@@ -4,10 +4,10 @@ import { useState } from "react";
 type CustomDropdownProps = {
     options: Array<string>;
     onChange: (selectedOption: string) => void;
-    placeholder?: string;
+    placeholder: string;
 };
 
-export default function CustomDropdown({ options, onChange, placeholder = "Rank seçiniz" }: CustomDropdownProps) {
+export default function CustomDropdown({ options, onChange, placeholder }: CustomDropdownProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [selectedRank, setSelectedRank] = useState<string | null>(null);
 
