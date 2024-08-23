@@ -83,7 +83,15 @@ export default function Valorant() {
                 </div>
                 <form onSubmit={handleSubmit}>
                     <div className="flex gap-2">
-                        <CustomDropdown options={valorantRanks} onChange={(selectedRank) => setRank(selectedRank)} placeholder="Rank seçiniz" />
+                        <CustomDropdown
+                            options={valorantRanks}
+                            onChange={(selectedRank) => {
+                                if (rank !== selectedRank) {
+                                    setRank(selectedRank);
+                                }
+                            }}
+                            placeholder="Rank seçiniz"
+                        />
                         <button
                             type="submit"
                             className="px-4 py-1 bg-[#61dafb] text-[#1e1e1e] font-semibold rounded-md hover:bg-[#4fa8c7] focus:outline-none focus:ring-2 focus:ring-[#61dafb] transition duration-200"
