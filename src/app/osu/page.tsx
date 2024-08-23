@@ -40,7 +40,7 @@ export default function Osu() {
         <section className="w-full">
             <Header activeGame="osu" />
             <div className="bg-[#292929] flex min-h-screen flex-col items-center">
-                <div className="flex flex-col text-center mb-6">
+                <div className="flex flex-col text-center mb-6 mx-6">
                     <span className="text-4xl mt-8 pb-5">
                         <span className="font-bold italic pr-2">YKS Çalışsaydım </span>
                         <span className="font-normal">ne kazanırdım?</span>
@@ -49,7 +49,7 @@ export default function Osu() {
                         <span className="text-pink-300 font-bold">osu!</span> oynamak yerine ders çalışsaydınız hangi üniversiteleri kazanırdınız?
                     </span>
                 </div>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} className="mx-6">
                     <div className="flex gap-2">
                         <input
                             type="text"

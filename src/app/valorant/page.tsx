@@ -61,7 +61,7 @@ export default function Valorant() {
         <section className="w-full">
             <Header activeGame="valorant" />
             <div className="bg-[#292929] flex min-h-screen flex-col items-center">
-                <div className="flex flex-col text-center mb-6">
+                <div className="flex flex-col text-center mb-6 mx-6">
                     <span className="text-4xl mt-8 pb-5">
                         <span className="font-bold italic pr-2">YKS Çalışsaydım </span>
                         <span className="font-normal">ne kazanırdım?</span>

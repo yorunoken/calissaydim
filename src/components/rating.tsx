@@ -1,25 +1,32 @@
-import { SetStateAction, useState } from "react";
+import { useState } from "react";
 
 export default function Rating() {
     const [rating, setRating] = useState(0);
+    const [hoverRating, setHoverRating] = useState(0);
     const [isLocked, setIsLocked] = useState(false);
     const [message, setMessage] = useState("");
 
-    const handleRating = (rate: SetStateAction<number>) => {
+    function handleRating(rate: number) {
         if (!isLocked) {
             setIsLocked(true);
             setRating(rate);
 
-            sendRatingToDatabase(rate); // Placeholder function to send the rating to the database
+            sendRatingToDatabase(rate);
 
             setMessage("Görüşünüz gönderildi.");
         }
-    };
+    }
 
-    const sendRatingToDatabase = (rate: SetStateAction<number>) => {
+    async function sendRatingToDatabase(rate: number) {
+        await fetch("/api/proxy/feedback", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ rating: rate }),
+        });
         console.log(`Rating sent to database: ${rate}`);
-        // Implement your database logic here
-    };
+    }
 
     return (
         <div className="mt-6 flex flex-col items-center">
@@ -31,9 +38,19 @@ export default function Rating() {
                     <svg
                         key={star}
                         onClick={() => handleRating(star)}
-                        className={`w-4 h-4 ms-1 transition-colors duration-300 ease-in-out ${rating >= star ? "text-yellow-300" : "text-gray-300 dark:text-gray-500"} ${
-                            isLocked ? "cursor-not-allowed" : "cursor-pointer"
-                        }`}
+                        onMouseEnter={() => {
+                            if (!isLocked) {
+                                setHoverRating(star);
+                            }
+                        }}
+                        onMouseLeave={() => {
+                            if (!isLocked) {
+                                setHoverRating(0);
+                            }
+                        }}
+                        className={`w-4 h-4 ms-1 transition-colors duration-200 ease-in-out 
+                            ${rating >= star || hoverRating >= star ? "text-yellow-300" : "text-gray-300 dark:text-gray-500"}
+                            ${isLocked ? "cursor-not-allowed" : "cursor-pointer"}`}
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor"
