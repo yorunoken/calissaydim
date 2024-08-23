@@ -3,14 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev:next": "next dev",
+    "dev:next": "next dev -p $PORT",
     "dev:rs": "cd backend && cargo run",
     "dev": "concurrently \"bun run dev:rs\" \"bun run dev:next\"",
     "build": "bun run build:rs && bun run build:next",
     "build:rs": "cd backend && cargo build -r",
     "build:next": "next build",
     "start:rs": "cd backend && ./target/release/backend",
-    "start:next": "next start",
+    "start:next": "next start -p $PORT",
     "start": "concurrently \"bun run start:rs\" \"bun run start:next\"",
     "lint": "next lint"
   },
@@ -19,11 +19,9 @@
     "flowbite": "^2.5.1",
     "next": "14.2.5",
     "react": "^18",
-    "react-dom": "^18",
-    "react-loading-skeleton": "^3.4.0"
+    "react-dom": "^18"
   },
   "devDependencies": {
-    "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",

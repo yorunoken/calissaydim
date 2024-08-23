@@ -5,10 +5,6 @@
 /.pnp
 .pnp.js
 .yarn/install-state.gz
-bun.lockb
-
-# testing
-/coverage
 
 # next.js
 /.next/
