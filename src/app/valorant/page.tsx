@@ -41,6 +41,8 @@ export default function Valorant() {
     const [dataLoaded, setDataLoaded] = useState<boolean>(false);
     const [universitiesData, setUniversitiesData] = useState<Record<ExamCategory, Array<CustomResult>>>({} as Record<ExamCategory, Array<CustomResult>>);
 
+    const game = "valorant";
+
     async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
         event.preventDefault();
         if (!rank) {
@@ -119,7 +121,7 @@ export default function Valorant() {
                         </div>
                         <div className="flex flex-col px-4 mt-4 justify-center mb-12">
                             <Universities examType={ExamCategory.TYT} data={universitiesData[ExamCategory.TYT]} />
-                            <Rating />
+                            <Rating game={game} />
                         </div>
                     </>
                 )}

@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function Rating() {
+export default function Rating({ game }: { game: string }) {
     const [rating, setRating] = useState(0);
     const [hoverRating, setHoverRating] = useState(0);
     const [isLocked, setIsLocked] = useState(false);
@@ -23,7 +23,7 @@ export default function Rating() {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ rating: rate }),
+            body: JSON.stringify({ stars: rate, game }),
         });
         console.log(`Rating sent to database: ${rate}`);
     }
