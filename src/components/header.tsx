@@ -20,6 +20,9 @@ export default function Header({ activeGame }: { activeGame?: string }) {
                 <Link href="/valorant" className={`${activeGame === "valorant" ? "text-rose-600" : "text-gray-400"}`}>
                     Valorant
                 </Link>
+                <Link href="/cs2" className={`${activeGame === "cs2" ? "text-yellow-300" : "text-gray-400"}`}>
+                    CS2
+                </Link>
             </div>
         </header>
     );
