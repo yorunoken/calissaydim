@@ -9,7 +9,7 @@
         "build": "bun run build:rs && bun run build:next",
         "build:rs": "cd backend && cargo build -r",
         "build:next": "next build",
-        "start:rs": "cd backend && ./target/release/backend",
+        "start:rs": "cd backend && ./target/release/calissaydim-backend",
         "start:next": "dotenv -e .env.local -- next start",
         "start": "concurrently \"bun run start:rs\" \"bun run start:next\"",
         "lint": "next lint"
