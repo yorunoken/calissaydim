@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const backendPort = 3030;
+const backendPort = process.env.BACKEND_PORT;
 
 export async function GET(request: NextRequest) {
     const pathname = request.nextUrl.pathname;
@@ -8,6 +8,8 @@ export async function GET(request: NextRequest) {
     const path = pathname.replace("/api/proxy", "");
 
     const url = new URL(`http://localhost:${backendPort}/api${path}`);
+    console.log("proxying API url: " + url);
+
     searchParams.forEach((value, key) => {
         url.searchParams.append(key, value);
     });
@@ -23,6 +25,7 @@ export async function POST(request: NextRequest) {
     const path = pathname.replace("/api/proxy", "");
 
     const url = new URL(`http://localhost:${backendPort}/api${path}`);
+    console.log("proxying API url: " + url);
 
     const response = await fetch(url, {
         method: "POST",
