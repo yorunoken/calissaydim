@@ -34,14 +34,15 @@ export default function Osu() {
             return;
         }
 
-        if (data.statistics.global_rank === null) {
+        const { rank } = data;
+
+        if (rank === null) {
             setWarning("Sıralama bulunamadı. Sıralamadaki aktifliğinizi kontrol edin.");
             setLoading(false);
 
             return;
         }
 
-        const rank = data.statistics.global_rank;
         setUsername(data.username);
         setWarning(null);
 
